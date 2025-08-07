@@ -1,0 +1,50 @@
+
+<form (ngSubmit)="searchMovie($event)">
+  <mat-form-field class="filter-input">
+    <input type="text" [formControl]="year" maxlength="4" matInput placeholder="Ex: 2012">
+    @if (year.hasError('required')) {
+      <mat-error>Field is required</mat-error>
+    }
+    @if (year.hasError('pattern')) {
+      <mat-error>Only numbers is allowed</mat-error>
+    }
+    <button type="submit" mat-icon-button matSuffix>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+</form>    
+
+@if (!isLoading) {
+  <table mat-table [dataSource]="dataSource">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <!-- Year Column -->
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef>Year</th>
+      <td mat-cell *matCellDef="let element">{{ element.year }}</td>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Title</th>
+      <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Mostra aviso quando nenhum dado for encontrado -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">No data found. Use the form above to filter results.</td>
+    </tr>
+  </table>
+} @else {
+  <!-- Data Loader -->
+  <div class="loader">
+    <mat-progress-spinner color="accent" [diameter]="100" [mode]="'indeterminate'"></mat-progress-spinner>
+  </div>
+}

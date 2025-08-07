@@ -1,0 +1,81 @@
+
+<h2>Movies List</h2>
+
+<div class="container mat-elevation-z8">
+  @if (isLoading) {
+    <div class="loading-shade">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="filterMovies()">
+    <mat-form-field>
+      <mat-label>Year</mat-label>
+      <input type="text" formControlName="year" maxlength="4" matInput placeholder="Ex: 2012">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Winner</mat-label>
+      <mat-select formControlName="winner">
+        <mat-option value="">Yes/No</mat-option>
+        <mat-option [value]="true">Yes</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <button type="submit" mat-flat-button>
+      Search
+    </button>
+  </form>  
+
+  <div class="table-container"> 
+    <!-- Table -->
+    <table mat-table [dataSource]="dataSource">
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      </ng-container>
+
+      <!-- Year Column -->
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef>Year</th>
+        <td mat-cell *matCellDef="let element">{{ element.year }}</td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+      </ng-container>
+
+      <!-- Studios Column -->
+      <ng-container matColumnDef="studios">
+        <th mat-header-cell *matHeaderCellDef>Studios</th>
+        <td mat-cell *matCellDef="let element">{{ element.studios.join(', ') }}</td>
+      </ng-container>
+
+      <!-- Producers Column -->
+      <ng-container matColumnDef="producers">
+        <th mat-header-cell *matHeaderCellDef>Producers</th>
+        <td mat-cell *matCellDef="let element">{{ element.producers.join(', ') }}</td>
+      </ng-container>
+
+      <!-- Winner Column -->
+      <ng-container matColumnDef="winner">
+        <th mat-header-cell *matHeaderCellDef>Winner</th>
+        <td mat-cell *matCellDef="let element">{{ element.winner ? 'Yes' : 'No' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Mostra aviso quando nenhum dado for encontrado -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">No data found. Use the form above to filter results.</td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator [length]="resultsLength" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+</div>

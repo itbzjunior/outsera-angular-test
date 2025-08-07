@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 55px 10px;
+}
+
+table {
+    .no-data {
+        text-align: center;
+        font-size: 16px;
+        line-height: 1.4em;
+        height: 32px;
+    }
+}

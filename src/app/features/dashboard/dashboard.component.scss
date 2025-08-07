@@ -1,0 +1,22 @@
+.grid {
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+mat-card {
+  overflow: hidden;
+
+  mat-card-content {
+    //max-height: 300px;
+    overflow: auto;
+    padding: 0;
+  }
+}
+
+@media (max-width: 1150px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

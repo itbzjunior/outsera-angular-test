@@ -1,0 +1,35 @@
+<section class="container" [class.example-is-mobile]="isMobile()">
+
+  <header class="header">
+    <mat-toolbar>
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h1>Outsera Front-end Test - Golden Raspberry Awards</h1>
+    </mat-toolbar>
+  </header>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav class="sidenav-menu" #snav [mode]="isMobile() ? 'over' : 'side'" [fixedInViewport]="isMobile()" fixedTopGap="56" opened>
+      <mat-nav-list>
+        @for (nav of navItems; track nav) {
+          <a mat-list-item [routerLink]="[nav.link]" routerLinkActive="active">
+            <mat-icon matListItemIcon>{{ nav.icon }}</mat-icon>
+            <span matListItemTitle>{{ nav.title }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="sidenav-content">
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+
+      <footer class="footer">
+        <p>By Itamar Bezerra Junior</p>
+      </footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+</section>
