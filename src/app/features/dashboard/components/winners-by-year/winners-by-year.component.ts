@@ -18,18 +18,26 @@ import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angu
 })
 export class WinnersByYearComponent implements OnInit {
 
+  // Colunas disponíveis na tabela dos filmes
   displayedColumns: string[] = ['id', 'year', 'title'];
+
+  // Variavel que receberá a fonte dos dados da tabela para visualização
   dataSource: MovieResponse[] = [];
+
+  // Variavel de controle para mostrar o loader na página enquanto houver requisições pendentes
   isLoading: boolean = false;
 
-  year = new FormControl('2025', {
-    nonNullable: true,
+  // Definição do input para filtro por ano, sendo o valor padrão o ano atual
+  currentYear = new Date().getFullYear();
+  year = new FormControl(this.currentYear.toString(), {
+    nonNullable: true, // Não aceita valor "null"
     validators: [
-      Validators.required,
-      Validators.pattern('[0-9]+'),
+      Validators.required, // Validador de campo obrigatório
+      Validators.pattern('[0-9]+'), // Validador de apenas números
     ]
   });
 
+  // Variavel de controle para "unsubscribe" nas Observables que ainda não foram concluídas
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   /**
@@ -40,16 +48,17 @@ export class WinnersByYearComponent implements OnInit {
   ) { }
 
   /**
-   * On init
+   * Lifecycle: Ao iniciar o componente
    */
   ngOnInit(): void {
     this.loadMovieWinnersByYear();
   }
 
   /**
-   * On destroy
+   * Lifecycle: Ao destruir o componente
    */
   ngOnDestroy(): void {
+    // Cancela todas as Observables pendentes
     this._unsubscribeAll.next(true);
     this._unsubscribeAll.complete();
   }
@@ -59,17 +68,19 @@ export class WinnersByYearComponent implements OnInit {
    */
   private loadMovieWinnersByYear() {
 
-    // Return if the form is invalid
+    // Se o formulário é inválido
     if (this.year.invalid) {
-      return; // Stop execution
+      return; // Para a execução
     }
 
+    // Mostra o loader enquanto a chamada acontecer
     this.isLoading = true;
     
+    // Faz a chamada ao serviço da API, buscando os dados
     this.movieService.getWinnersByYear(this.year.value)
       .pipe(
         takeUntil(this._unsubscribeAll),
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading = false) // Ao finalizar, esconde o loader
       )
       .subscribe(result => (this.dataSource = result));
   }
@@ -79,8 +90,8 @@ export class WinnersByYearComponent implements OnInit {
    */
   searchMovie(event: any): void {
 
-      // Filter itens
-      this.loadMovieWinnersByYear();
+    // Filtrar itens
+    this.loadMovieWinnersByYear();
   }
 
 }

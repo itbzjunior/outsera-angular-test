@@ -21,18 +21,28 @@ import { FormsModule, ReactiveFormsModule, FormControl, FormGroup } from '@angul
 })
 export class MovieListComponent implements AfterViewInit, OnDestroy {
 
+  // Colunas disponíveis na tabela dos filmes
   displayedColumns: string[] = ['id', 'year', 'title', 'studios', 'producers', 'winner'];
+
+  // Variavel que receberá a fonte dos dados da tabela para visualização
   dataSource: MovieResponse[] = [];
+
+  // Contagem total de registros da tabela, preenchido após a chamada do serviço da API
   resultsLength = 0;
+
+  // Variavel de controle para mostrar o loader na página enquanto houver requisições pendentes
   isLoading: boolean = true;
 
+  // Definição do formulário para filtrar os dados da tabela
   form = new FormGroup({
     winner: new FormControl(null),
     year: new FormControl('')
   });
 
+  // ViewChild da paginação
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator;
 
+  // Variavel de controle para "unsubscribe" nas Observables que ainda não foram concluídas
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   /**
@@ -43,26 +53,25 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   /**
-   * On afterViewInit
+   * Lifecycle: Após iniciar a view do componente
    */
   ngAfterViewInit(): void {
 
+    // Carrega a tabela com os resultados da primeira página
     this.paginator.page
       .pipe(
         startWith({}),
         switchMap(() => {
-          return this.loadMovies();
+          return this.loadMovies(); // Carrega os filmes
         }),
         map((data: PageMovieResponse) => {
           
-          // Se os dados forem NULL
+          // Se os dados forem NULL, retorna uma array vazia
           if (data === null) {
             return [];
           }
 
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
-          // would prevent users from re-triggering requests.
+          // Atualiza o total de elementos
           this.resultsLength = data.totalElements;
 
           // Retorna apenas o "content", que contém os filmes da lista
@@ -73,9 +82,10 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * On destroy
+   * Lifecycle: Ao destruir o componente
    */
   ngOnDestroy(): void {
+    // Cancela todas as Observables pendentes
     this._unsubscribeAll.next(true);
     this._unsubscribeAll.complete();
   }
@@ -85,26 +95,30 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
    */
   private loadMovies() {
 
+    // Variavel para mostrar o loader enquanto a chamada acontece
     this.isLoading = true;
 
+    // Define os parâmetros para filtrar os resultados na chamada
     const page = this.paginator.pageIndex;
     const pageSize = this.paginator.pageSize;
     const winner = this.form.controls.winner.value;
     const year = this.form.controls.year.value;
     
+    // Retorna a observable do serviço
     return this.movieService.getMovies(page, pageSize, winner, year)
       .pipe(
         takeUntil(this._unsubscribeAll),
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading = false) // Ao finalizar, esconde o loader
       );
   }
 
   /**
-   * Carrega os filmes
+   * Ação de filtrar os filmes
    */
   filterMovies() {
     this.paginator.pageIndex = 0; // Reseta a página para a primeira
 
+    // Carrega os filmes com os filtros informados
     this.loadMovies()
       .subscribe(data => {
         this.dataSource = data.content;

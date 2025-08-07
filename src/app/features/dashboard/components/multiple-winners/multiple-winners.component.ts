@@ -13,10 +13,16 @@ import { finalize, takeUntil, Subject } from 'rxjs';
 })
 export class MultipleWinnersComponent implements OnInit, OnDestroy {
 
+  // Colunas disponíveis na tabela dos filmes
   displayedColumns: string[] = ['year', 'winnerCount'];
+
+  // Variavel que receberá a fonte dos dados da tabela para visualização
   dataSource: YearWithMultipleWinners[] = [];
+
+  // Variavel de controle para mostrar o loader na página enquanto houver requisições pendentes
   isLoading: boolean = true;
 
+  // Variavel de controle para "unsubscribe" nas Observables que ainda não foram concluídas
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   /**
@@ -27,24 +33,27 @@ export class MultipleWinnersComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * On init
+   * Lifecycle: Ao iniciar o componente
    */
   ngOnInit(): void {
     
+    // Mostra o loader enquanto a chamada acontecer
     this.isLoading = true;
 
+    // Faz a chamada ao serviço da API, buscando os dados
     this.movieService.getYearsWithMultipleWinners()
       .pipe(
         takeUntil(this._unsubscribeAll),
-        finalize(() => this.isLoading = false)
+        finalize(() => this.isLoading = false) // Ao finalizar, esconde o loader
       )
       .subscribe(result => (this.dataSource = result.years));
   }
 
   /**
-   * On destroy
+   * Lifecycle: Ao destruir o componente
    */
   ngOnDestroy(): void {
+    // Cancela todas as Observables pendentes
     this._unsubscribeAll.next(true);
     this._unsubscribeAll.complete();
   }
