@@ -106,7 +106,7 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
     const params: PageMovieQueryParams = {
       page: this.paginator.pageIndex,
       size: this.paginator.pageSize,
-      winner: this.form.controls.winner.value,
+      winner: this.form.controls.winner.value ?? undefined,
       year: this.form.controls.year.value
     }
     
