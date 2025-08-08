@@ -1,7 +1,7 @@
 
 @if (!isLoading) {
   <h4>Maximum</h4>
-  <table mat-table [dataSource]="minDataSource">
+  <table class="table-max" mat-table [dataSource]="minDataSource">
     <!-- Producer Column -->
     <ng-container matColumnDef="producer">
       <th mat-header-cell *matHeaderCellDef>Producer</th>
@@ -31,7 +31,7 @@
   </table>
 
   <h4>Minimum</h4>
-  <table mat-table [dataSource]="maxDataSource">
+  <table class="table-min" mat-table [dataSource]="maxDataSource">
     <!-- Producer Column -->
     <ng-container matColumnDef="producer">
       <th mat-header-cell *matHeaderCellDef>Producer</th>
