@@ -15,6 +15,9 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class AppComponent implements OnDestroy {
 
+  // Titulo da pagina
+  title = 'Outsera Angular Test - Golden Raspberry Awards';
+
   // Itens do menu lateral, para usar no loop @for
   navItems = [
     {

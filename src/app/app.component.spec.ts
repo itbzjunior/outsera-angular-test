@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'outsera-angular-test' title`, () => {
+  it(`should have the 'Outsera Angular Test - Golden Raspberry Awards' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    //expect(app.title).toEqual('outsera-angular-test');
+    expect(app.title).toEqual('Outsera Angular Test - Golden Raspberry Awards');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, outsera-angular-test');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Outsera Angular Test - Golden Raspberry Awards');
   });
 });

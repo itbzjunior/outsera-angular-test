@@ -20,4 +20,9 @@ describe('DashboardComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('deve conter os 4 cards de dados no dashboard', () => {
+    
+    i
+  });
 });
