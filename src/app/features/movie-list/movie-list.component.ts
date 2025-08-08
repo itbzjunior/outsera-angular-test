@@ -7,7 +7,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MovieResponse, PageMovieResponse } from '@shared/models/movie';
+import { MovieResponse, PageMovieQueryParams, PageMovieResponse } from '@shared/models/movie';
 import { MovieService } from '@shared/services/movie.service';
 import { finalize, takeUntil, Subject } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -35,8 +35,12 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
 
   // Definição do formulário para filtrar os dados da tabela
   form = new FormGroup({
-    winner: new FormControl(null),
-    year: new FormControl('')
+    winner: new FormControl(undefined, {
+      nonNullable: true, // Não aceita valor "null"
+    }),
+    year: new FormControl('', {
+      nonNullable: true, // Não aceita valor "null"
+    })
   });
 
   // ViewChild da paginação
@@ -99,13 +103,15 @@ export class MovieListComponent implements AfterViewInit, OnDestroy {
     this.isLoading = true;
 
     // Define os parâmetros para filtrar os resultados na chamada
-    const page = this.paginator.pageIndex;
-    const pageSize = this.paginator.pageSize;
-    const winner = this.form.controls.winner.value;
-    const year = this.form.controls.year.value;
+    const params: PageMovieQueryParams = {
+      page: this.paginator.pageIndex,
+      size: this.paginator.pageSize,
+      winner: this.form.controls.winner.value,
+      year: this.form.controls.year.value
+    }
     
     // Retorna a observable do serviço
-    return this.movieService.getMovies(page, pageSize, winner, year)
+    return this.movieService.getMovies(params)
       .pipe(
         takeUntil(this._unsubscribeAll),
         finalize(() => this.isLoading = false) // Ao finalizar, esconde o loader

@@ -6,6 +6,12 @@ export interface MovieResponse {
   producers: string[];
   winner: boolean;
 }
+export interface PageMovieQueryParams {
+  page: number;
+  size: number;
+  winner?: boolean;
+  year?: number|string;
+}
 
 export interface PageMovieResponse {
   totalPages: number;

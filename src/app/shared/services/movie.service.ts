@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { MovieResponse, PageMovieResponse, YearsWithMultipleWinnersResponse, StudiosWithWinCountResponse, ProducerWinIntervalResponse } from '../models/movie';
+import { MovieResponse, PageMovieQueryParams, PageMovieResponse, YearsWithMultipleWinnersResponse, StudiosWithWinCountResponse, ProducerWinIntervalResponse } from '../models/movie';
 import { Observable, catchError, of } from 'rxjs';
 
 @Injectable({
@@ -17,17 +17,9 @@ export class MovieService {
   /**
    * Recupera dados dos filmes
    * 
-   * @param page    Número da página
-   * @param size    Tamanho do resultado por página
-   * @param winner  Se retorna apenas vencedores
-   * @param year    Ano do filme
+   * @param params  Parametros para filtro
    */
-	getMovies(
-    page: number = 0,
-    size: number = 10,
-    winner: boolean|null,
-    year: string|null
-  ): Observable<PageMovieResponse> {
+	getMovies(params: PageMovieQueryParams): Observable<PageMovieResponse> {
 
     // Define a URL do recurso a ser chamado
     let url = this.API_URL;
@@ -41,22 +33,22 @@ export class MovieService {
     };
 
     // Define a paginação do recurso
-    options.params = options.params.set('page', page);
-    options.params = options.params.set('size', size);
+    options.params = options.params.set('page', params.page ?? 0);
+    options.params = options.params.set('size', params.size ?? 10);
 
     // Se for definido "winner", seta o parâmetro na requisição
-    if( winner !== null ) {
-      options.params = options.params.set('winner', winner);
+    if( typeof params.winner !== 'undefined' ) {
+      options.params = options.params.set('winner', params.winner);
     }
 
     // Se for definido "year", seta o parâmetro na requisição
-    if( year !== null ) {
-      options.params = options.params.set('year', year);
+    if( typeof params.year !== 'undefined' ) {
+      options.params = options.params.set('year', params.year);
     }
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<PageMovieResponse>(url, options).pipe(
-      catchError( this.handleError<PageMovieResponse>('getMovies') )
+      catchError( this.handleError<PageMovieResponse>('getMovies', undefined) )
     );
 	}
 
@@ -65,7 +57,7 @@ export class MovieService {
    * 
    * @param id    ID do registro
    */
-	getMovieById(id: number): Observable<MovieResponse> {
+	getMovieById(id: string|number): Observable<MovieResponse> {
 
     // Define a URL do recurso a ser chamado
     let url = `${this.API_URL}/${id}`;
@@ -79,7 +71,7 @@ export class MovieService {
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<MovieResponse>(url, options).pipe(
-      catchError( this.handleError<MovieResponse>('getMovieById') )
+      catchError( this.handleError<MovieResponse>('getMovieById', undefined) )
     );
 	}
 
@@ -100,7 +92,7 @@ export class MovieService {
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<YearsWithMultipleWinnersResponse>(url, options).pipe(
-      catchError( this.handleError<YearsWithMultipleWinnersResponse>('getYearsWithMultipleWinners') )
+      catchError( this.handleError<YearsWithMultipleWinnersResponse>('getYearsWithMultipleWinners', undefined) )
     );
 	}
 
@@ -109,7 +101,7 @@ export class MovieService {
    * 
    * @param year    Ano do filme
    */
-	getWinnersByYear(year: string): Observable<MovieResponse[]> {
+	getWinnersByYear(year: string|number): Observable<MovieResponse[]> {
 
     // Se o campo for vazio, retorna um erro
     if( year == '' ) {
@@ -132,7 +124,7 @@ export class MovieService {
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<MovieResponse[]>(url, options).pipe(
-      catchError( this.handleError<MovieResponse[]>('getWinnersByYear') )
+      catchError( this.handleError<MovieResponse[]>('getWinnersByYear', []) )
     );
 	}
 
@@ -153,7 +145,7 @@ export class MovieService {
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<StudiosWithWinCountResponse>(url, options).pipe(
-      catchError( this.handleError<StudiosWithWinCountResponse>('getStudiosWithWinCount') )
+      catchError( this.handleError<StudiosWithWinCountResponse>('getStudiosWithWinCount', undefined) )
     );
 	}
 
@@ -174,7 +166,7 @@ export class MovieService {
 
     // Retorna a requisição. Usa o catchError() para lidar com erros na API
     return this.http.get<ProducerWinIntervalResponse>(url, options).pipe(
-      catchError( this.handleError<ProducerWinIntervalResponse>('getMaxMinWinIntervalForProducers') )
+      catchError( this.handleError<ProducerWinIntervalResponse>('getMaxMinWinIntervalForProducers', undefined) )
     );
 	}
   
