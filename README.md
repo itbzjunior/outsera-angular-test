@@ -1,5 +1,5 @@
 
-# Teste Outsera Front-end - Dashboard Angular - Golden Raspberry Awards
+# Outsera Angular Test - Golden Raspberry Awards
 Interface para possibilitar a leitura da lista de indicados e vencedores da
 categoria Pior Filme do Golden Raspberry Awards
 
