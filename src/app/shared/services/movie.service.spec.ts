@@ -9,7 +9,10 @@ describe('MovieService', () => {
   let httpTestingController: HttpTestingController;
   let service: MovieService;
 
+  // Antes de cada teste
   beforeEach(() => {
+
+    // Configura o módulo de testes HTTP
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -17,11 +20,14 @@ describe('MovieService', () => {
       ],
     });
 
+    // Injeta o controller de testes
     httpTestingController = TestBed.inject(HttpTestingController);
 
+    // Injeta o serviço principal
     service = TestBed.inject(MovieService);
   });
 
+  // Após cada teste
   afterEach(() => {
     httpTestingController.verify();
   });
@@ -29,7 +35,7 @@ describe('MovieService', () => {
   // Testa o método getMovies()
   describe('getMovies', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
       // Query params
       let params: PageMovieQueryParams = {
@@ -37,18 +43,22 @@ describe('MovieService', () => {
         size: 1,
       }
 
+      // Chama o serviço
       service.getMovies(params).subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies?page=${params.page}&size=${params.size}`
       });
 
+      // Espera que o metodo seja GET
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: PageMovieResponse = {
         "content": [{
           "id": 1,
@@ -91,6 +101,7 @@ describe('MovieService', () => {
         size: 1,
       }
 
+      // Chama o serviço
       service.getMovies(params).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData); // SE possui o atributo "content" no retorno
@@ -99,15 +110,18 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies?page=${params.page}&size=${params.size}`
       });
       
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
 
-    it('should filter out data by year', (done) => {
+    it('deve retornar os dados esperados filtrados por ano', (done) => {
+      // Define o resultado esperado
       const expectedData: PageMovieResponse = {
         "content": [{
           "id": 202,
@@ -151,6 +165,7 @@ describe('MovieService', () => {
         year: 2019
       }
 
+      // Chama o serviço
       service.getMovies(params).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData);
@@ -159,15 +174,18 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies?page=0&size=1&year=2019`
       });
 
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
 
-    it('should filter out data by only winners', (done) => {
+    it('deve retornar os dados filtrando apenas vencedores', (done) => {
+      // Define o resultado esperado
       const expectedData: PageMovieResponse = {
         "content": [{
           "id": 1,
@@ -239,6 +257,7 @@ describe('MovieService', () => {
         winner: true
       }
 
+      // Chama o serviço
       service.getMovies(params).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData);
@@ -247,11 +266,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies?page=0&size=5&winner=true`
       });
 
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
@@ -259,12 +280,14 @@ describe('MovieService', () => {
   // Testa o método getMovieById()
   describe('getMovieById', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
       const id = 1;
 
+      // Chama o serviço
       service.getMovieById(id).subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/${id}`
@@ -273,8 +296,9 @@ describe('MovieService', () => {
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: MovieResponse = {
         "id": 1,
         "year": 1980,
@@ -286,6 +310,7 @@ describe('MovieService', () => {
 
       const id = 1;
 
+      // Chama o serviço
       service.getMovieById(id).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData);
@@ -294,11 +319,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/${id}`
       });
 
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
@@ -306,10 +333,12 @@ describe('MovieService', () => {
   // Testa o método getYearsWithMultipleWinners()
   describe('getYearsWithMultipleWinners', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
+      // Chama o serviço
       service.getYearsWithMultipleWinners().subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/yearsWithMultipleWinners`
@@ -318,8 +347,9 @@ describe('MovieService', () => {
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: YearsWithMultipleWinnersResponse = {
         "years": [{
           "year": 1986,
@@ -333,6 +363,7 @@ describe('MovieService', () => {
         }]
       };
 
+      // Chama o serviço
       service.getYearsWithMultipleWinners().subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData); // Se possui o atributo "years" na resposta
@@ -341,11 +372,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/yearsWithMultipleWinners`
       });
       
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
@@ -353,12 +386,14 @@ describe('MovieService', () => {
   // Testa o método getWinnersByYear()
   describe('getWinnersByYear', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
       const year = 2019;
 
+      // Chama o serviço
       service.getWinnersByYear(year).subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/winnersByYear?year=${year}`
@@ -367,8 +402,9 @@ describe('MovieService', () => {
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: MovieResponse[] = [{
         "id": 202,
         "year": 2019,
@@ -380,6 +416,7 @@ describe('MovieService', () => {
 
       const year = 2019;
 
+      // Chama o serviço
       service.getWinnersByYear(year).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData); // Se possui o atributo "title" na resposta
@@ -388,15 +425,18 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/winnersByYear?year=${year}`
       });
       
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
 
-    it('should filter out data by year', (done) => {
+    it('deve retornar os dados esperados filtrados por ano', (done) => {
+      // Define o resultado esperado
       const expectedData: MovieResponse[] = [{
         "id": 202,
         "year": 2019,
@@ -409,6 +449,7 @@ describe('MovieService', () => {
       // Query params
       const year = 2019;
 
+      // Chama o serviço
       service.getWinnersByYear(year).subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData);
@@ -417,11 +458,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/winnersByYear?year=${year}`
       });
 
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
@@ -429,10 +472,12 @@ describe('MovieService', () => {
   // Testa o método getStudiosWithWinCount()
   describe('getStudiosWithWinCount', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
+      // Chama o serviço
       service.getStudiosWithWinCount().subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/studiosWithWinCount`
@@ -441,8 +486,9 @@ describe('MovieService', () => {
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: StudiosWithWinCountResponse = {
         "studios": [{
           "name": "Columbia Pictures",
@@ -531,6 +577,7 @@ describe('MovieService', () => {
         }]
       };
 
+      // Chama o serviço
       service.getStudiosWithWinCount().subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData); // Se possui o atributo "studios" na resposta
@@ -539,11 +586,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/studiosWithWinCount`
       });
       
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
@@ -551,10 +600,12 @@ describe('MovieService', () => {
   // Testa o método getMaxMinWinIntervalForProducers()
   describe('getMaxMinWinIntervalForProducers', () => {
 
-    it('should use GET to retrieve data', () => {
+    it('deve usar o método GET para retornar o resultado', () => {
 
+      // Chama o serviço
       service.getMaxMinWinIntervalForProducers().subscribe();
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/maxMinWinIntervalForProducers`
@@ -563,8 +614,9 @@ describe('MovieService', () => {
       expect(testRequest.request.method).toEqual('GET');
     });
 
-    it('should return expected data', (done: DoneFn) => {
+    it('deve retornar os dados esperados', (done: DoneFn) => {
 
+      // Define o resultado esperado
       const expectedData: ProducerWinIntervalResponse = {
         "min": [{
           "producer": "Joel Silver",
@@ -580,6 +632,7 @@ describe('MovieService', () => {
         }]
       };
 
+      // Chama o serviço
       service.getMaxMinWinIntervalForProducers().subscribe({
         next: (data) => {
           expect(data).toEqual(expectedData); // Se possui o atributo "min" na resposta
@@ -589,11 +642,13 @@ describe('MovieService', () => {
         error: done.fail,
       });
 
+      // Define a chamada de teste
       const testRequest = httpTestingController.expectOne({
         method: 'GET',
         url: `https://challenge.outsera.tech/api/movies/maxMinWinIntervalForProducers`
       });
       
+      // Define a resposta da chamada teste, sem efetivamente chamá-la
       testRequest.flush(expectedData);
     });
   })
