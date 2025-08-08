@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { TopStudiosComponent } from './top-studios.component';
 
@@ -8,7 +10,13 @@ describe('TopStudiosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TopStudiosComponent]
+      imports: [
+        TopStudiosComponent
+      ],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     })
     .compileComponents();
 
@@ -17,7 +25,7 @@ describe('TopStudiosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('deve criar o componente principal', () => {
     expect(component).toBeTruthy();
   });
 });

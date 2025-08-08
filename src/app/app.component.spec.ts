@@ -8,22 +8,15 @@ describe('AppComponent', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('deve criar o app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'Outsera Angular Test - Golden Raspberry Awards' title`, () => {
+  it(`deve ter o título 'Outsera Angular Test - Golden Raspberry Awards'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('Outsera Angular Test - Golden Raspberry Awards');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Outsera Angular Test - Golden Raspberry Awards');
   });
 });

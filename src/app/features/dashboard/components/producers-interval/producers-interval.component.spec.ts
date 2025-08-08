@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { ProducersIntervalComponent } from './producers-interval.component';
 
@@ -8,7 +10,13 @@ describe('ProducersIntervalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProducersIntervalComponent]
+      imports: [
+        ProducersIntervalComponent
+      ],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     })
     .compileComponents();
 
@@ -17,7 +25,7 @@ describe('ProducersIntervalComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('deve criar o componente principal', () => {
     expect(component).toBeTruthy();
   });
 });
